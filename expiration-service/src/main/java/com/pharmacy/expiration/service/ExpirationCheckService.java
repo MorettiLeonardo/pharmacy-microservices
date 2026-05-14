@@ -64,4 +64,26 @@ public class ExpirationCheckService {
         ProductExpiration product = new ProductExpiration(productCode, productName, expirationDate);
         return productExpirationRepository.save(product);
     }
+
+    @Transactional
+    public void upsertFromInventory(Long productId, String productName, LocalDate expirationDate) {
+        if (productId == null) {
+            throw new IllegalArgumentException("productId is required");
+        }
+        if (productName == null || productName.isBlank()) {
+            throw new IllegalArgumentException("productName is required");
+        }
+        if (expirationDate == null) {
+            throw new IllegalArgumentException("expirationDate is required");
+        }
+
+        String productCode = "INV-" + productId;
+        ProductExpiration product = productExpirationRepository.findByProductCode(productCode)
+                .orElseGet(() -> new ProductExpiration(productCode, productName, expirationDate));
+
+        product.updateFromInventory(productName, expirationDate);
+        productExpirationRepository.save(product);
+        log.info("Expiration synced from inventory: productId={}, productCode={}, expirationDate={}",
+                productId, productCode, expirationDate);
+    }
 }

@@ -22,7 +22,9 @@ docker compose up --build
 
 - `sales-service` cria venda e publica evento Kafka `sale-created`.
 - `inventory-service` consome `sale-created` e reduz estoque.
-- `expiration-service` executa scheduler a cada 60s para marcar vencidos como `EXPIRED`.
+- `inventory-service` publica `product-created` quando um produto novo é cadastrado.
+- `expiration-service` consome `product-created` e cadastra automaticamente o monitoramento de validade.
+- `expiration-service` executa scheduler a cada 10s para marcar vencidos como `EXPIRED`.
 - `gateway` centraliza o acesso HTTP.
 
 Fluxo de venda:
@@ -82,7 +84,7 @@ Fluxo de venda:
 }
 ```
 
-### Criar registro de validade
+### Criar registro de validade (opcional/manual)
 **POST** `http://localhost:8080/api/expirations/products`
 
 ```json
@@ -128,7 +130,7 @@ Fluxo de venda:
 ### Expiration
 - `GET /api/expirations/products`: lista geral.
 - `GET /api/expirations/products/expired`: apenas expirados.
-- Scheduler (`fixedRate=60000`) marca vencidos e gera logs.
+- Scheduler (`fixedRate=10000`) marca vencidos e gera logs (inclusive quando não encontra vencidos).
 
 ## Evento Kafka
 
@@ -141,6 +143,18 @@ Payload:
   "saleId": 1,
   "productId": 1,
   "quantity": 2
+}
+```
+
+Tópico: `product-created`
+
+Payload:
+
+```json
+{
+  "productId": 1,
+  "name": "Dipirona 500mg",
+  "expirationDate": "2026-12-31"
 }
 ```
 

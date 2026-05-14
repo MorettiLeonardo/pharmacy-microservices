@@ -27,5 +27,8 @@ management:
         include: health,info
 
 logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %clr(%-5level){green} %clr([${spring.application.name}]){cyan} %clr([%thread]){faint} %clr(%logger{36}){yellow} - %msg%n"
   level:
+    com.pharmacy.gateway: INFO
     org.springframework.cloud.gateway: INFO

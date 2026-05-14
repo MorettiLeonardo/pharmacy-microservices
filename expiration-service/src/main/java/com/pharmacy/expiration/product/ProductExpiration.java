@@ -69,6 +69,12 @@ public class ProductExpiration {
         return lastStatusUpdate;
     }
 
+    public void updateFromInventory(String productName, LocalDate expirationDate) {
+        this.productName = productName;
+        this.expirationDate = expirationDate;
+        this.lastStatusUpdate = Instant.now();
+    }
+
     public void markExpired() {
         this.status = ProductStatus.EXPIRED;
         this.lastStatusUpdate = Instant.now();

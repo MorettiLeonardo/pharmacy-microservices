@@ -17,11 +17,13 @@ public class ExpirationScheduler {
         this.expirationCheckService = expirationCheckService;
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 10000)
     public void runExpirationCheck() {
         int expiredCount = expirationCheckService.processExpiredProducts();
         if (expiredCount > 0) {
             log.info("Expiration check completed. {} product(s) marked as EXPIRED.", expiredCount);
+        } else {
+            log.info("Expiration check completed. No expired products found.");
         }
     }
 }

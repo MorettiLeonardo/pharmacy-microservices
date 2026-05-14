@@ -18,6 +18,15 @@ spring:
     show-sql: false
   kafka:
     bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring:
+          json:
+            add:
+              type:
+                headers: false
     consumer:
       group-id: inventory-service
       auto-offset-reset: earliest
@@ -32,8 +41,11 @@ app:
   kafka:
     topics:
       sale-created: sale-created
+      product-created: product-created
 
 logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %clr(%-5level){green} %clr([${spring.application.name}]){cyan} %clr([%thread]){faint} %clr(%logger{36}){yellow} - %msg%n"
   level:
     com.pharmacy.inventory: INFO
 

@@ -3,6 +3,7 @@ package com.pharmacy.inventory.service;
 import com.pharmacy.inventory.domain.Product;
 import com.pharmacy.inventory.exception.InsufficientStockException;
 import com.pharmacy.inventory.exception.ProductNotFoundException;
+import com.pharmacy.inventory.messaging.ProductCreatedProducer;
 import com.pharmacy.inventory.repository.ProductRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -12,13 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProductCreatedProducer productCreatedProducer;
 
-    public ProductService(ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository, ProductCreatedProducer productCreatedProducer) {
         this.productRepository = productRepository;
+        this.productCreatedProducer = productCreatedProducer;
     }
 
     public Product create(Product product) {
-        return productRepository.save(product);
+        Product createdProduct = productRepository.save(product);
+        productCreatedProducer.publish(createdProduct);
+        return createdProduct;
     }
 
     public List<Product> findAll() {

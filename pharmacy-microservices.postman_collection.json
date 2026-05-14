@@ -2,7 +2,7 @@
   "info": {
     "name": "Pharmacy Microservices",
     "_postman_id": "d2d6f729-3f47-4d2f-9c3c-4f3b6a4b0e2c",
-    "description": "Collection completa do sistema pharmacy-microservices (Gateway + serviços diretos).",
+    "description": "Collection completa do sistema pharmacy-microservices (Gateway + serviços diretos), incluindo fluxo automático Inventory -> Expiration via Kafka (product-created).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
@@ -32,7 +32,7 @@
                 "products"
               ]
             },
-            "description": "Cria produto no inventory-service via gateway."
+            "description": "Cria produto no inventory-service via gateway. Ao criar, o Inventory publica evento product-created no Kafka e o Expiration sincroniza automaticamente."
           }
         },
         {
@@ -151,7 +151,7 @@
           }
         },
         {
-          "name": "Expiration - Create Product Expiration",
+          "name": "Expiration - Create Product Expiration (Manual/Optional)",
           "request": {
             "method": "POST",
             "header": [
@@ -174,11 +174,12 @@
                 "expirations",
                 "products"
               ]
-            }
+            },
+            "description": "Cadastro manual opcional. O fluxo recomendado é automático via POST /products no inventory."
           }
         },
         {
-          "name": "Expiration - List Products",
+          "name": "Expiration - List Products (Auto Sync Check)",
           "request": {
             "method": "GET",
             "url": {
@@ -191,7 +192,8 @@
                 "expirations",
                 "products"
               ]
-            }
+            },
+            "description": "Use após criar produto em /products para conferir sincronização automática no expiration-service."
           }
         },
         {

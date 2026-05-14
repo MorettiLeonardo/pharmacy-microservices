@@ -16,9 +16,31 @@ spring:
   h2:
     console:
       enabled: true
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: expiration-service
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.pharmacy.expiration.messaging
+        spring.json.value.default.type: com.pharmacy.expiration.messaging.ProductCreatedEvent
+        spring.json.use.type.headers: false
+
+app:
+  kafka:
+    topics:
+      product-created: product-created
 
 management:
   endpoints:
     web:
       exposure:
         include: health,info
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} %clr(%-5level){green} %clr([${spring.application.name}]){cyan} %clr([%thread]){faint} %clr(%logger{36}){yellow} - %msg%n"
+  level:
+    com.pharmacy.expiration: INFO
