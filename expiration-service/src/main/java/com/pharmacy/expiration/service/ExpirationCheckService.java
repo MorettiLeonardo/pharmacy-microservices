@@ -1,5 +1,6 @@
 package com.pharmacy.expiration.service;
 
+import com.pharmacy.expiration.exception.DuplicateProductCodeException;
 import com.pharmacy.expiration.product.ProductExpiration;
 import com.pharmacy.expiration.product.ProductExpirationRepository;
 import com.pharmacy.expiration.product.ProductStatus;
@@ -10,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ExpirationCheckService {
@@ -49,9 +49,18 @@ public class ExpirationCheckService {
 
     @Transactional
     public ProductExpiration createProduct(String productCode, String productName, LocalDate expirationDate) {
-        Objects.requireNonNull(productCode, "productCode is required");
-        Objects.requireNonNull(productName, "productName is required");
-        Objects.requireNonNull(expirationDate, "expirationDate is required");
+        if (productCode == null || productCode.isBlank()) {
+            throw new IllegalArgumentException("productCode is required");
+        }
+        if (productName == null || productName.isBlank()) {
+            throw new IllegalArgumentException("productName is required");
+        }
+        if (expirationDate == null) {
+            throw new IllegalArgumentException("expirationDate is required");
+        }
+        if (productExpirationRepository.existsByProductCode(productCode)) {
+            throw new DuplicateProductCodeException(productCode);
+        }
         ProductExpiration product = new ProductExpiration(productCode, productName, expirationDate);
         return productExpirationRepository.save(product);
     }

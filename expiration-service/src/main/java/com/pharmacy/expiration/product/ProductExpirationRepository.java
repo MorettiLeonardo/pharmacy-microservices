@@ -10,4 +10,6 @@ public interface ProductExpirationRepository extends JpaRepository<ProductExpira
     List<ProductExpiration> findByExpirationDateBeforeAndStatusNot(LocalDate date, ProductStatus status);
 
     List<ProductExpiration> findByStatus(ProductStatus status);
+
+    boolean existsByProductCode(String productCode);
 }

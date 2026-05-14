@@ -1,0 +1,317 @@
+{
+  "info": {
+    "name": "Pharmacy Microservices",
+    "_postman_id": "d2d6f729-3f47-4d2f-9c3c-4f3b6a4b0e2c",
+    "description": "Collection completa do sistema pharmacy-microservices (Gateway + serviços diretos).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Gateway (http://localhost:8080)",
+      "item": [
+        {
+          "name": "Inventory - Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dipirona 500mg\",\n  \"stock\": 100,\n  \"expirationDate\": \"2026-12-31\",\n  \"controlled\": false\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            },
+            "description": "Cria produto no inventory-service via gateway."
+          }
+        },
+        {
+          "name": "Inventory - List Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Inventory - Get Product By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Inventory - Update Stock",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stock\": 80\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}/stock",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}",
+                "stock"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sales - Create Sale",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productId\": {{productId}},\n  \"quantity\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/sales",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sales"
+              ]
+            },
+            "description": "Cria venda e publica evento sale-created no Kafka."
+          }
+        },
+        {
+          "name": "Sales - List Sales",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sales",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sales"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sales - Get Sale By ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sales/{{saleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sales",
+                "{{saleId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Expiration - Create Product Expiration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"productCode\": \"MED-001\",\n  \"productName\": \"Amoxicilina 500mg\",\n  \"expirationDate\": \"2025-01-10\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/expirations/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expirations",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Expiration - List Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/expirations/products",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expirations",
+                "products"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Expiration - List Expired Products",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/api/expirations/products/expired",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expirations",
+                "products",
+                "expired"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Direct Services",
+      "item": [
+        {
+          "name": "Gateway Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{gatewayUrl}}/actuator/health",
+              "host": [
+                "{{gatewayUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Sales Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{salesUrl}}/actuator/health",
+              "host": [
+                "{{salesUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Inventory Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{inventoryUrl}}/actuator/health",
+              "host": [
+                "{{inventoryUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Expiration Health",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{expirationUrl}}/actuator/health",
+              "host": [
+                "{{expirationUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "gatewayUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "salesUrl",
+      "value": "http://localhost:8081"
+    },
+    {
+      "key": "inventoryUrl",
+      "value": "http://localhost:8082"
+    },
+    {
+      "key": "expirationUrl",
+      "value": "http://localhost:8083"
+    },
+    {
+      "key": "productId",
+      "value": "1"
+    },
+    {
+      "key": "saleId",
+      "value": "1"
+    }
+  ]
+}
