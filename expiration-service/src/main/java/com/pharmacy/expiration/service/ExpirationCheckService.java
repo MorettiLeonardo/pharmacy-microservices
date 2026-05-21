@@ -1,6 +1,5 @@
 package com.pharmacy.expiration.service;
 
-import com.pharmacy.expiration.exception.DuplicateProductCodeException;
 import com.pharmacy.expiration.product.ProductExpiration;
 import com.pharmacy.expiration.product.ProductExpirationRepository;
 import com.pharmacy.expiration.product.ProductStatus;
@@ -48,24 +47,6 @@ public class ExpirationCheckService {
     }
 
     @Transactional
-    public ProductExpiration createProduct(String productCode, String productName, LocalDate expirationDate) {
-        if (productCode == null || productCode.isBlank()) {
-            throw new IllegalArgumentException("productCode is required");
-        }
-        if (productName == null || productName.isBlank()) {
-            throw new IllegalArgumentException("productName is required");
-        }
-        if (expirationDate == null) {
-            throw new IllegalArgumentException("expirationDate is required");
-        }
-        if (productExpirationRepository.existsByProductCode(productCode)) {
-            throw new DuplicateProductCodeException(productCode);
-        }
-        ProductExpiration product = new ProductExpiration(productCode, productName, expirationDate);
-        return productExpirationRepository.save(product);
-    }
-
-    @Transactional
     public void upsertFromInventory(Long productId, String productName, LocalDate expirationDate) {
         if (productId == null) {
             throw new IllegalArgumentException("productId is required");
@@ -83,7 +64,7 @@ public class ExpirationCheckService {
 
         product.updateFromInventory(productName, expirationDate);
         productExpirationRepository.save(product);
-        log.info("Expiration synced from inventory: productId={}, productCode={}, expirationDate={}",
-                productId, productCode, expirationDate);
+        log.info("Sincronização: {} agora está sendo monitorado (Validade: {})", 
+                productName, expirationDate);
     }
 }

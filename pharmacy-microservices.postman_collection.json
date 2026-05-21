@@ -94,6 +94,22 @@
           }
         },
         {
+          "name": "Inventory - Delete Product",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "products",
+                "{{productId}}"
+              ]
+            }
+          }
+        },
+        {
           "name": "Sales - Create Sale",
           "request": {
             "method": "POST",
@@ -151,9 +167,9 @@
           }
         },
         {
-          "name": "Expiration - Create Product Expiration (Manual/Optional)",
+          "name": "Sales - Update Sale",
           "request": {
-            "method": "POST",
+            "method": "PUT",
             "header": [
               {
                 "key": "Content-Type",
@@ -162,20 +178,34 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"productCode\": \"MED-001\",\n  \"productName\": \"Amoxicilina 500mg\",\n  \"expirationDate\": \"2025-01-10\"\n}"
+              "raw": "{\n  \"quantity\": 5\n}"
             },
             "url": {
-              "raw": "{{baseUrl}}/api/expirations/products",
+              "raw": "{{baseUrl}}/sales/{{saleId}}",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "api",
-                "expirations",
-                "products"
+                "sales",
+                "{{saleId}}"
               ]
-            },
-            "description": "Cadastro manual opcional. O fluxo recomendado é automático via POST /products no inventory."
+            }
+          }
+        },
+        {
+          "name": "Sales - Delete Sale",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/sales/{{saleId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sales",
+                "{{saleId}}"
+              ]
+            }
           }
         },
         {

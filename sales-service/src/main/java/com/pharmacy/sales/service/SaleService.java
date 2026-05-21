@@ -32,8 +32,8 @@ public class SaleService {
         sale.setQuantity(quantity);
 
         Sale createdSale = saleRepository.save(sale);
-        log.info("Created sale id={}, productId={}, quantity={}",
-                createdSale.getId(), createdSale.getProductId(), createdSale.getQuantity());
+        log.info("NOVA VENDA: Produto ID {}, Quantidade {}", 
+                createdSale.getProductId(), createdSale.getQuantity());
 
         saleCreatedProducer.publish(createdSale);
         return createdSale;
@@ -47,6 +47,22 @@ public class SaleService {
     @Transactional(readOnly = true)
     public Sale findById(Long id) {
         return saleRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sale not found with id=" + id));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Venda não encontrada com id=" + id));
+    }
+
+    @Transactional
+    public Sale updateSale(Long id, Integer quantity) {
+        Sale sale = findById(id);
+        sale.setQuantity(quantity);
+        Sale updatedSale = saleRepository.save(sale);
+        log.info("VENDA ATUALIZADA: ID {}, Nova Quantidade {}", id, quantity);
+        return updatedSale;
+    }
+
+    @Transactional
+    public void deleteSale(Long id) {
+        Sale sale = findById(id);
+        saleRepository.delete(sale);
+        log.info("VENDA CANCELADA: ID {}", id);
     }
 }

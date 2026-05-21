@@ -17,13 +17,11 @@ public class ExpirationScheduler {
         this.expirationCheckService = expirationCheckService;
     }
 
-    @Scheduled(fixedRate = 10000)
+    @Scheduled(fixedRateString = "${app.scheduler.expiration-check-rate:20000}")
     public void runExpirationCheck() {
         int expiredCount = expirationCheckService.processExpiredProducts();
         if (expiredCount > 0) {
-            log.info("Expiration check completed. {} product(s) marked as EXPIRED.", expiredCount);
-        } else {
-            log.info("Expiration check completed. No expired products found.");
+            log.info("Auditoria concluída: {} produto(s) marcados como VENCIDOS.", expiredCount);
         }
     }
 }

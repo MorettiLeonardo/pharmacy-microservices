@@ -32,6 +32,8 @@ app:
   kafka:
     topics:
       product-created: product-created
+  scheduler:
+    expiration-check-rate: 20000
 
 management:
   endpoints:
